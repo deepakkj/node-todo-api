@@ -27,6 +27,8 @@ client.connect((err) => {
         // findDocument(collection, () => closeClientConnection(client));
         // updateDocument(collection, () => closeClientConnection(client));
         // removeDocument(collection, () => closeClientConnection(client));
+        // removeManyDocuments(collection, () => closeClientConnection(client));
+        // removeDocumentAndReturnRemovedDocument(collection, () => closeClientConnection(client));
 
     });
 
@@ -139,3 +141,29 @@ const removeDocument = (collection, callback) => {
         }
     });
 };
+
+const removeManyDocuments = (collection, callback) => {
+    collection.deleteMany({
+        text: 'Hello World 7'
+    }).then((result) => {
+        console.log('result', result.result);
+        callback(result);
+        console.log('--- > Successfully deleted Document in the Collection');
+    }, (err) => {
+        return console.log('--- > Unable to delete a Document in the TodosTable Collection', err);
+    });
+};
+
+const removeDocumentAndReturnRemovedDocument = (collection, callback) => {
+    collection.findOneAndDelete({
+        isCompleted : true
+    }, (err, result) => {
+        if(err) {
+            return console.log('--- > Unable to delete a Document in the TodosTable Collection', err);
+        } else {
+            console.log('--- > result', result);
+            console.log('--- > Successfully deleted Document in the Collection');
+            callback(result);
+        }
+    });
+}
